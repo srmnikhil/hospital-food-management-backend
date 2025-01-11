@@ -202,4 +202,79 @@ router.get("/deliveryStatus", async (req, res) => {
     }
 });
 
+// ROUTE 9: Fetch all patients using: GET "/api/manager/getAllPatients". Login required
+router.get("/getAllPatients", async (req, res) => {
+    try {
+        // Fetch all patients from the Patient model
+        const patients = await Patient.find();
+
+        // If no patients found, send an appropriate message
+        if (patients.length === 0) {
+            return res.status(404).json({ message: "No patients found" });
+        }
+
+        // Return the list of patients
+        res.json({ success: true, patients });
+    } catch (error) {
+        console.error("Error fetching all patients", error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+// ROUTE 10: Fetch all pantry staff using: GET "/api/manager/getPantryStaff". Login required
+router.get("/getPantryStaff", async (req, res) => {
+    try {
+        // Fetch all pantry staff from the PantryStaff model
+        const pantryStaff = await PantryStaff.find();
+
+        // If no pantry staff found, send an appropriate message
+        if (pantryStaff.length === 0) {
+            return res.status(404).json({ message: "No Pantry Staff found" });
+        }
+
+        // Return the list of pantry staff
+        res.json({ success: true, pantryStaff });
+    } catch (error) {
+        console.error("Error fetching all Pantry Staff", error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+// ROUTE 11: Fetch all meal task using: GET "/api/manager/getMealTask". Login required
+router.get("/getMealTask", async (req, res) => {
+    try {
+        // Fetch all meal task from the Meal Task model
+        const mealTask = await MealTask.find();
+
+        // If no meal task found, send an appropriate message
+        if (mealTask.length === 0) {
+            return res.status(404).json({ message: "No Meal Task found" });
+        }
+
+        // Return the list of meal task
+        res.json({ success: true, mealTask });
+    } catch (error) {
+        console.error("Error fetching all Meal Task", error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+router.get("/getDietChart", async (req, res) => {
+    try {
+        // Fetch all diet chart from the Diet Chart model
+        const dietChart = await DietChart.find()
+            .populate("patientId", "name");
+
+        // If no diet chart found, send an appropriate message
+        if (dietChart.length === 0) {
+            return res.status(404).json({ message: "No Diet Chart found" });
+        }
+
+        // Return the list of diet chart
+        res.json({ success: true, dietChart });
+    } catch (error) {
+        console.error("Error fetching all Diet Chart", error);
+        res.status(500).send("Internal Server Error");
+    }
+});
 module.exports = router;
