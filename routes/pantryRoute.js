@@ -19,9 +19,8 @@ router.get("/tasks", async (req, res) => {
     try {
         const tasks = await MealTask.find()
             .populate("assignedTo", "name")
-            .populate("patientId", "name roomNumber")
-            .populate("dietChart", "mealPlan instructions");
-
+            .populate("patientId", "name bedNumber")
+            .populate("dietChart");
         res.json(tasks);
     } catch (error) {
         console.error("Error fetching tasks", error);
@@ -58,7 +57,7 @@ router.patch("/task/:taskId", [
 // **Manage delivery personnel**:
 
 // ROUTE 3: Add delivery personnel details
-router.post("/deliveryPerson", async (req, res) => {
+router.post("/addDeliveryPersonnel", async (req, res) => {
     try {
         const { name, contactInfo, otherDetails } = req.body;
 
@@ -77,10 +76,29 @@ router.post("/deliveryPerson", async (req, res) => {
     }
 });
 
+// ROUTE 4: To fetch all Delivery Personnel
+router.get("/getDeliveryPersonnel", async (req, res) => {
+    try {
+        // Fetch all delivery personnel from the Patient model
+        const deliveryPersons = await DeliveryPerson.find();
+
+        // If no delivery personnel found, send an appropriate message
+        if (deliveryPersons.length === 0) {
+            return res.status(404).json({ message: "No delivery personnel found" });
+        }
+
+        // Return the list of delivery personnel
+        res.json({ success: true, deliveryPersons });
+    } catch (error) {
+        console.error("Error fetching all delivery personnel", error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
 // ROUTE 4: Assign specific meal boxes to delivery personnel
 router.patch("/assignDelivery/:taskId", async (req, res) => {
     try {
-        const { pantryStaffId } = req.body;
+        const { deliveryPersonId } = req.body;
 
         const task = await MealTask.findById(req.params.taskId);
         
@@ -97,12 +115,11 @@ router.patch("/assignDelivery/:taskId", async (req, res) => {
         const updatedTask = await MealTask.findByIdAndUpdate(
             req.params.taskId,
             {
-                assignedTo: pantryStaffId,
+                deliveryAssignedTo: deliveryPersonId, 
                 deliveryStatus: "Out for Delivery"
             },
             { new: true }
-        ).populate("assignedTo");
-
+        );
         res.json(updatedTask);
     } catch (error) {
         console.error("Error assigning delivery personnel", error);

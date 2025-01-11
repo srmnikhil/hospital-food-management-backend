@@ -22,6 +22,10 @@ router.patch("/updateDeliveryStatus/:taskId", async (req, res) => {
             return res.status(404).json({ error: "Task not found" });
         }
 
+        if (task.deliveryStatus === 'Delivered') {
+            return res.status(400).json({ error: "The package is already delivered." });
+        }
+        
         // Ensure the delivery status is "Out for Delivery" before updating
         if (task.deliveryStatus !== 'Out for Delivery') {
             return res.status(400).json({ error: "Delivery status is not 'Out for Delivery'. Cannot update to 'Delivered'." });

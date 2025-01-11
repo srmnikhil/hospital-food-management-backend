@@ -9,6 +9,20 @@ const MealTask = require("../models/MealTask");
 
 const router = express.Router();
 
+router.get("/preparationStatus", async (req, res) => {
+    try {
+        const tasks = await MealTask.find()
+            .populate("assignedTo")
+            .populate("deliveryAssignedTo", "name")
+            .populate("patientId", "name bedNumber")
+            .populate("dietChart");
+        res.json(tasks);
+    } catch (error) {
+        console.error("Error fetching preparation status", error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
 // Middleware to check for Manager role
 router.use(fetchUser, async (req, res, next) => {
     const user = await User.findById(req.user.id);
@@ -172,17 +186,6 @@ router.post("/assignPreparationTask", [
         res.json({ success: true, task });
     } catch (error) {
         console.error("Error assigning preparation task", error);
-        res.status(500).send("Internal Server Error");
-    }
-});
-
-// ROUTE 7: To track food preparation status using: POST "/api/manager/preparationStatus". Login required
-router.get("/preparationStatus", async (req, res) => {
-    try {
-        const tasks = await MealTask.find().populate("assignedTo").populate("dietChart");
-        res.json(tasks);
-    } catch (error) {
-        console.error("Error fetching preparation status", error);
         res.status(500).send("Internal Server Error");
     }
 });
