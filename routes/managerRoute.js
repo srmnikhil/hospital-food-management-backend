@@ -47,11 +47,14 @@ router.post("/addPatient", [
         return res.status(400).json({ errors: errors.array() });
     }
     try {
-        let checkPatient = await Patient.findOne({ bedNumber: req.body.bedNumber });
+        const bedNumber = req.body.bedNumber.toLowerCase();
+        let checkPatient = await Patient.findOne(
+            {bedNumber: { $regex: new RegExp(`^${bedNumber}$`, 'i') }}
+        );
         if (checkPatient) {
             return res.status(400).json({ error: "Bed is occupied or you are trying to add same patient again." });
         }
-        const { name, diseases, allergies, roomNumber, bedNumber, floorNumber, age, gender, contactInfo, emergencyContact, remarks } = req.body;
+        const { name, diseases, allergies, roomNumber, floorNumber, age, gender, contactInfo, emergencyContact, remarks } = req.body;
 
         const patient = await Patient.create({
             name,
@@ -82,6 +85,10 @@ router.put("/updatePatient/:id", async (req, res) => {
 
         if (!patient) {
             return res.status(404).json({ error: "Patient not found" });
+        }
+
+        if(updates.bedNumber){
+            return res.status(404).json({ error: "Bed number can't be update" });
         }
 
         res.json({ success: true, patient, message: "Patient updated successfully." });
