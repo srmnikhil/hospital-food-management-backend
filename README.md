@@ -82,12 +82,6 @@ JWT_SECRET=your_secret_key
 Run the server:
 
 ```bash
-npm run dev
-```
-
-Or:
-
-```bash
 npm start
 ```
 
