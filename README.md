@@ -29,7 +29,6 @@ The system is built using a scalable and modular architecture.
 - Diet chart management APIs  
 - Meal scheduling and tracking APIs  
 - Inventory management system  
-- Report generation endpoints  
 - Centralized error handling  
 - Secure password hashing  
 
