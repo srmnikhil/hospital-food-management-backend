@@ -13,7 +13,6 @@ The backend is responsible for:
 - Managing patient records and diet charts  
 - Handling authentication and role-based access  
 - Coordinating pantry, nutritionist, and delivery workflows  
-- Automating inventory updates  
 - Generating operational reports  
 - Ensuring data integrity and security  
 
