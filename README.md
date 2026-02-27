@@ -153,10 +153,6 @@ Authorization: Bearer <token>
 - View delivery assignments  
 - Update meal delivery status  
 
-### Viewer
-- Read-only access  
-- Can view patient and meal data  
-
 ---
 
 ## 📡 API Modules
