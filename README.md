@@ -44,7 +44,6 @@ The system is built using a scalable and modular architecture.
 
 ### Database
 - MongoDB  
-- Mongoose ODM  
 
 ### Authentication & Security
 - JSON Web Token (JWT)  
